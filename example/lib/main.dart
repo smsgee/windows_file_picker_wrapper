@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:windows_file_picker_wrapper/windows_file_picker_wrapper.dart';
 
@@ -89,14 +92,31 @@ class _FilePickerExampleScreenState extends State<FilePickerExampleScreen> {
       fileName: 'backup_export.json',
       allowedExtensions: ['json'],
     );
-    setState(() {
-      if (path != null) {
-        _status = 'Saved Destination:';
-        _results = [path];
-      } else {
-        _status = 'Save file cancelled.';
+    if (path != null) {
+      try {
+        final sampleData = const JsonEncoder.withIndent('  ').convert({
+          'plugin': 'windows_file_picker_wrapper',
+          'version': '1.0.2',
+          'exportedAt': DateTime.now().toIso8601String(),
+          'message': 'Real file written successfully to disk via Windows Native Picker!',
+          'sampleItems': ['Item 1', 'Item 2', 'Item 3'],
+        });
+        await File(path).writeAsString(sampleData);
+        setState(() {
+          _status = 'File written successfully to:';
+          _results = [path];
+        });
+      } catch (e) {
+        setState(() {
+          _status = 'File path chosen, but write error: $e';
+          _results = [path];
+        });
       }
-    });
+    } else {
+      setState(() {
+        _status = 'Save file cancelled.';
+      });
+    }
   }
 
   @override
@@ -135,7 +155,7 @@ class _FilePickerExampleScreenState extends State<FilePickerExampleScreen> {
                 CupertinoListTile(
                   leading: const Icon(CupertinoIcons.floppy_disk, color: CupertinoColors.systemPurple),
                   title: const Text('Save File'),
-                  subtitle: const Text('Modern Windows 10/11 SaveFileDialog'),
+                  subtitle: const Text('Prompts destination and writes real JSON content'),
                   trailing: const CupertinoListTileChevron(),
                   onTap: _saveFile,
                 ),
