@@ -1,3 +1,6 @@
+/// A rock-solid, deadlock-free native Windows 10/11 File and Folder Picker for Flutter desktop.
+library windows_file_picker_wrapper;
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -28,6 +31,9 @@ enum WindowsFileType {
 /// This completely eliminates in-process COM apartment deadlocks, DirectX/Impeller
 /// Z-order foreground locks, and platform thread message pump freezes.
 class WindowsFilePickerWrapper {
+  /// Private constructor to prevent direct instantiation of utility class.
+  const WindowsFilePickerWrapper._();
+
   /// Opens the modern Windows 10/11 File Explorer Folder Dialog (`IFileOpenDialog` with `FOS_PICKFOLDERS`).
   ///
   /// Returns the absolute path of the selected folder, or `null` if cancelled.

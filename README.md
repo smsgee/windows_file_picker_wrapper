@@ -27,7 +27,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  windows_file_picker_wrapper: ^1.0.0
+  windows_file_picker_wrapper: ^1.0.1
 ```
 
 ---
@@ -70,6 +70,11 @@ final String? savePath = await WindowsFilePickerWrapper.saveFile(
   allowedExtensions: ['json'],
 );
 ```
+
+---
+
+## Example App
+See the [example](example) directory for a complete iOS Cupertino-styled demo application.
 
 ---
 

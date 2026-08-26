@@ -1,7 +1,9 @@
 ## 1.0.1
 
-* Explicitly restrict supported platform metadata to Windows only.
-* Update publisher metadata and homepage URLs.
+* Added complete iOS/Cupertino-styled example application in `example/`.
+* Achieved 100% dartdoc documentation coverage.
+* Explicitly declared `platforms: windows:` top-level metadata.
+* Updated homepage and repository metadata.
 
 ## 1.0.0
 

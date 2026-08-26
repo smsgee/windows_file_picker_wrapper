@@ -1,0 +1,19 @@
+name: windows_file_picker_wrapper_example
+description: Demonstrates how to use the windows_file_picker_wrapper plugin with an iOS-styled Cupertino interface.
+publish_to: "none"
+version: 1.0.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  windows_file_picker_wrapper:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
