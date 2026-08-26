@@ -27,7 +27,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  windows_file_picker_wrapper: ^1.0.1
+  windows_file_picker_wrapper: ^1.0.2
 ```
 
 ---
