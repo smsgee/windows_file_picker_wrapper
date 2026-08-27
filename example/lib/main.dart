@@ -29,24 +29,56 @@ class FilePickerExampleScreen extends StatefulWidget {
   const FilePickerExampleScreen({super.key});
 
   @override
-  State<FilePickerExampleScreen> createState() => _FilePickerExampleScreenState();
+  State<FilePickerExampleScreen> createState() =>
+      _FilePickerExampleScreenState();
 }
 
 class _FilePickerExampleScreenState extends State<FilePickerExampleScreen> {
   String _status = 'Ready. Select an action below.';
   List<String> _results = [];
 
-  Future<void> _pickFolder() async {
+  Future<void> _pickModernFile() async {
+    setState(() => _status = 'Opening Modern File Picker (Any File)...');
+    final path = await WindowsFilePickerWrapper.pickFile(
+      title: 'Select Any File',
+      type: WindowsFileType.any,
+    );
+    setState(() {
+      if (path != null) {
+        _status = 'Selected File:';
+        _results = [path];
+      } else {
+        _status = 'File selection cancelled.';
+      }
+    });
+  }
+
+  Future<void> _pickModernFolder() async {
     setState(() => _status = 'Opening Modern Folder Picker...');
-    final path = await WindowsFilePickerWrapper.pickFolder(
+    final path = await WindowsFilePickerWrapper.pickModernFolder(
       title: 'Select Destination Directory',
     );
     setState(() {
       if (path != null) {
-        _status = 'Selected Folder:';
+        _status = 'Selected Modern Folder:';
         _results = [path];
       } else {
-        _status = 'Folder selection cancelled.';
+        _status = 'Modern folder selection cancelled.';
+      }
+    });
+  }
+
+  Future<void> _pickClassicFolder() async {
+    setState(() => _status = 'Opening Classic Tree-view Folder Picker...');
+    final path = await WindowsFilePickerWrapper.pickClassicFolder(
+      title: 'Select Directory (Classic Tree)',
+    );
+    setState(() {
+      if (path != null) {
+        _status = 'Selected Classic Folder:';
+        _results = [path];
+      } else {
+        _status = 'Classic folder selection cancelled.';
       }
     });
   }
@@ -96,9 +128,10 @@ class _FilePickerExampleScreenState extends State<FilePickerExampleScreen> {
       try {
         final sampleData = const JsonEncoder.withIndent('  ').convert({
           'plugin': 'windows_file_picker_wrapper',
-          'version': '1.0.2',
+          'version': '1.0.3',
           'exportedAt': DateTime.now().toIso8601String(),
-          'message': 'Real file written successfully to disk via Windows Native Picker!',
+          'message':
+              'Real file written successfully to disk via Windows Native Picker!',
           'sampleItems': ['Item 1', 'Item 2', 'Item 3'],
         });
         await File(path).writeAsString(sampleData);
@@ -129,33 +162,59 @@ class _FilePickerExampleScreenState extends State<FilePickerExampleScreen> {
         child: ListView(
           children: [
             CupertinoListSection.insetGrouped(
-              header: const Text('PICKER ACTIONS'),
+              header: const Text('File/Folder Picker Actions'),
               children: [
                 CupertinoListTile(
-                  leading: const Icon(CupertinoIcons.folder_fill, color: CupertinoColors.activeBlue),
-                  title: const Text('Pick Folder'),
-                  subtitle: const Text('Modern Windows 10/11 Folder Dialog'),
+                  leading: const Icon(CupertinoIcons.doc,
+                      color: CupertinoColors.activeBlue),
+                  title: const Text('Pick File (Modern)'),
+                  subtitle:
+                      const Text('Modern Windows 10/11 Single File Dialog'),
                   trailing: const CupertinoListTileChevron(),
-                  onTap: _pickFolder,
+                  onTap: _pickModernFile,
                 ),
                 CupertinoListTile(
-                  leading: const Icon(CupertinoIcons.photo_fill_on_rectangle_fill, color: CupertinoColors.activeGreen),
-                  title: const Text('Pick Multiple Photos'),
-                  subtitle: const Text('Multi-select image filter (*.jpg, *.png, etc.)'),
+                  leading: const Icon(CupertinoIcons.folder_badge_plus,
+                      color: CupertinoColors.systemTeal),
+                  title: const Text('Pick Folder (Modern)'),
+                  subtitle:
+                      const Text('Modern Windows 10/11 Explorer Folder Dialog'),
+                  trailing: const CupertinoListTileChevron(),
+                  onTap: _pickModernFolder,
+                ),
+                CupertinoListTile(
+                  leading: const Icon(CupertinoIcons.folder,
+                      color: CupertinoColors.systemGrey),
+                  title: const Text('Pick Folder (Classic)'),
+                  subtitle: const Text(
+                      'Legacy Win32 Tree-view Folder Dialog (SHBrowseForFolder)'),
+                  trailing: const CupertinoListTileChevron(),
+                  onTap: _pickClassicFolder,
+                ),
+                CupertinoListTile(
+                  leading: const Icon(
+                      CupertinoIcons.photo_fill_on_rectangle_fill,
+                      color: CupertinoColors.activeGreen),
+                  title: const Text('Pick Multiple Photos (Modern)'),
+                  subtitle: const Text(
+                      'Multi-select image filter (*.jpg, *.png, etc.)'),
                   trailing: const CupertinoListTileChevron(),
                   onTap: _pickImages,
                 ),
                 CupertinoListTile(
-                  leading: const Icon(CupertinoIcons.doc_text_fill, color: CupertinoColors.systemOrange),
-                  title: const Text('Pick Single Document'),
+                  leading: const Icon(CupertinoIcons.doc_text_fill,
+                      color: CupertinoColors.systemOrange),
+                  title: const Text('Pick Single Document (Modern)'),
                   subtitle: const Text('Custom filter (*.pdf, *.docx, *.json)'),
                   trailing: const CupertinoListTileChevron(),
                   onTap: _pickSingleDocument,
                 ),
                 CupertinoListTile(
-                  leading: const Icon(CupertinoIcons.floppy_disk, color: CupertinoColors.systemPurple),
-                  title: const Text('Save File'),
-                  subtitle: const Text('Prompts destination and writes real JSON content'),
+                  leading: const Icon(CupertinoIcons.floppy_disk,
+                      color: CupertinoColors.systemPurple),
+                  title: const Text('Save File (Modern)'),
+                  subtitle: const Text(
+                      'Prompts destination and writes real JSON content'),
                   trailing: const CupertinoListTileChevron(),
                   onTap: _saveFile,
                 ),
@@ -165,17 +224,22 @@ class _FilePickerExampleScreenState extends State<FilePickerExampleScreen> {
               header: const Text('RESULT / STATUS'),
               footer: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text(_status, style: const TextStyle(fontSize: 13, color: CupertinoColors.systemGrey)),
+                child: Text(_status,
+                    style: const TextStyle(
+                        fontSize: 13, color: CupertinoColors.systemGrey)),
               ),
               children: [
                 if (_results.isEmpty)
                   const CupertinoListTile(
-                    title: Text('No files or folder selected yet', style: TextStyle(color: CupertinoColors.placeholderText)),
+                    title: Text('No files or folder selected yet',
+                        style:
+                            TextStyle(color: CupertinoColors.placeholderText)),
                   )
                 else
                   ..._results.map(
                     (p) => CupertinoListTile(
-                      leading: const Icon(CupertinoIcons.checkmark_circle_fill, color: CupertinoColors.activeGreen, size: 20),
+                      leading: const Icon(CupertinoIcons.checkmark_circle_fill,
+                          color: CupertinoColors.activeGreen, size: 20),
                       title: Text(p, style: const TextStyle(fontSize: 13)),
                     ),
                   ),

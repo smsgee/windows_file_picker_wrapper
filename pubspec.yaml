@@ -1,6 +1,6 @@
 name: windows_file_picker_wrapper
 description: A rock-solid, deadlock-free native Windows 10/11 File and Folder Picker for Flutter desktop. Uses isolated STA processes to eliminate COM deadlocks and Z-order focus freezes.
-version: 1.0.2
+version: 1.0.3
 homepage: https://smsgee.com
 repository: https://github.com/smsgee/windows_file_picker_wrapper
 issue_tracker: https://github.com/smsgee/windows_file_picker_wrapper/issues
@@ -15,8 +15,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  ffi: ^2.1.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
