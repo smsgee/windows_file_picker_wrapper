@@ -1,3 +1,11 @@
+## 1.0.3
+
+* Added modern Windows 10/11 Explorer-style folder picker (`pickModernFolder`) using COM `IFileOpenDialog` with `FOS_PICKFOLDERS`.
+* Preserved classic Win32 `SHBrowseForFolderW` tree-view folder picker as `pickClassicFolder`.
+* Enhanced `pickFolder` to default to the modern Explorer dialog with optional classic tree-view fallback (`useModern: false`).
+* Upgraded `pickFile`, `pickFiles`, and `saveFile` to modern COM Common Item Dialogs (`IFileOpenDialog` / `IFileSaveDialog`) with worker isolate execution.
+* Updated the example application demonstrating both modern and classic file and folder pickers.
+
 ## 1.0.2
 
 * Added complete iOS/Cupertino-styled example application in `example/`.
